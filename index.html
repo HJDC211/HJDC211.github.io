@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>刘森 — 个人主页</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌲</text></svg>">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- 页面过渡遮罩 -->
+    <div class="transition-overlay"></div>
+
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <a href="#home" class="nav-logo">LS</a>
+        <ul class="nav-links">
+            <li><a href="#home" class="nav-item active" data-page="home">首页</a></li>
+            <li><a href="#about" class="nav-item" data-page="about">关于</a></li>
+            <li><a href="#skills" class="nav-item" data-page="skills">技能</a></li>
+            <li><a href="#projects" class="nav-item" data-page="projects">作品</a></li>
+            <li><a href="#contact" class="nav-item" data-page="contact">联系</a></li>
+        </ul>
+        <button class="nav-toggle" aria-label="菜单">
+            <span></span><span></span><span></span>
+        </button>
+    </nav>
+
+    <!-- 页面容器 -->
+    <main id="app">
+
+        <!-- ========== 首页 ========== -->
+        <section id="home" class="page active">
+            <div class="page-inner">
+                <div class="hero">
+                    <div class="hero-avatar">
+                        <div class="avatar-wrapper" id="avatarContainer">
+                            <img src="assets/avatar.jpg" alt="刘森的头像" class="avatar-img">
+                        </div>
+                    </div>
+                    <h1 class="hero-name">
+                        <span class="name-char" style="--i:0">刘</span>
+                        <span class="name-char" style="--i:1">森</span>
+                    </h1>
+                    <p class="hero-tagline">在校学生 · 数码爱好者 · AI 探索者</p>
+                    <p class="hero-bio">
+                        对电脑软件、人工智能与数码世界充满热情。<br>
+                        正在用好奇心拼凑属于自己的一片天地。
+                    </p>
+                    <div class="hero-actions">
+                        <a href="#about" class="btn btn-primary" data-nav>了解更多</a>
+                        <a href="#contact" class="btn btn-outline" data-nav>联系我</a>
+                    </div>
+                </div>
+                <div class="scroll-hint">
+                    <span></span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== 关于页 ========== -->
+        <section id="about" class="page">
+            <div class="page-inner">
+                <h2 class="section-title">关于我</h2>
+                <div class="about-grid">
+                    <div class="about-card">
+                        <div class="card-icon">📋</div>
+                        <h3>基本信息</h3>
+                        <ul class="info-list">
+                            <li><span class="label">姓名</span><span class="value">刘森</span></li>
+                            <li><span class="label">生日</span><span class="value">2007 年 10 月 20 日</span></li>
+                            <li><span class="label">所在地</span><span class="value">辽宁省</span></li>
+                        </ul>
+                    </div>
+                    <div class="about-card">
+                        <div class="card-icon">🎓</div>
+                        <h3>教育背景</h3>
+                        <ul class="info-list">
+                            <li><span class="label">学校</span><span class="value">辽宁省农业经济学校</span></li>
+                            <li><span class="label">预计毕业</span><span class="value">2026 年 7 月</span></li>
+                            <li><span class="label">学历</span><span class="value">高中阶段</span></li>
+                        </ul>
+                    </div>
+                    <div class="about-card">
+                        <div class="card-icon">🎯</div>
+                        <h3>目标</h3>
+                        <ul class="info-list">
+                            <li><span class="label">近期目标</span><span class="value">2028 年前考取驾照</span></li>
+                            <li><span class="label">持续探索</span><span class="value">AI 与数码技术</span></li>
+                        </ul>
+                    </div>
+                    <div class="about-card about-intro">
+                        <div class="card-icon">💡</div>
+                        <h3>关于本站</h3>
+                        <p>
+                            这个网站是测试 AI 能力的产物，也是我的个性化数字名片。
+                            在这里，你可以看到一个热爱数码、正在成长的年轻人。
+                            校内曾帮助许多老师和同学处理文档工作，积累了不少零散但实用的经验。
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== 技能页 ========== -->
+        <section id="skills" class="page">
+            <div class="page-inner">
+                <h2 class="section-title">技能</h2>
+                <div class="skills-grid">
+                    <div class="skill-card">
+                        <div class="skill-icon">🎬</div>
+                        <h3>视频剪辑</h3>
+                        <p>熟练使用剪辑软件，能够独立完成视频的后期处理与制作。</p>
+                        <div class="skill-bar"><div class="skill-fill" style="--w:80%"></div></div>
+                    </div>
+                    <div class="skill-card">
+                        <div class="skill-icon">📄</div>
+                        <h3>文档处理</h3>
+                        <p>精通 Word、Excel、PPT 等办公软件，擅长文档排版与美化。</p>
+                        <div class="skill-bar"><div class="skill-fill" style="--w:85%"></div></div>
+                    </div>
+                    <div class="skill-card">
+                        <div class="skill-icon">📐</div>
+                        <h3>文档规范化</h3>
+                        <p>帮助师生完成各类文档的格式统一、结构梳理与标准化整理。</p>
+                        <div class="skill-bar"><div class="skill-fill" style="--w:80%"></div></div>
+                    </div>
+                    <div class="skill-card">
+                        <div class="skill-icon">💻</div>
+                        <h3>数码知识</h3>
+                        <p>通过自学积累了广泛的电脑软件、硬件及 AI 相关知识。</p>
+                        <div class="skill-bar"><div class="skill-fill" style="--w:75%"></div></div>
+                    </div>
+                    <div class="skill-card">
+                        <div class="skill-icon">🎮</div>
+                        <h3>游戏理解</h3>
+                        <p>深度游戏玩家，对各种类型游戏有独到的理解与审美。</p>
+                        <div class="skill-bar"><div class="skill-fill" style="--w:70%"></div></div>
+                    </div>
+                    <div class="skill-card">
+                        <div class="skill-icon">🤝</div>
+                        <h3>协助与沟通</h3>
+                        <p>在校期间帮助多位老师与同学解决文档、技术相关问题。</p>
+                        <div class="skill-bar"><div class="skill-fill" style="--w:82%"></div></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== 作品页 ========== -->
+        <section id="projects" class="page">
+            <div class="page-inner">
+                <h2 class="section-title">作品</h2>
+                <p class="section-subtitle">作品虽零散，但每一件都带着我的热情与成长。</p>
+                <div class="projects-grid">
+                    <div class="project-card project-featured">
+                        <div class="project-thumb">
+                            <div class="project-thumb-placeholder">🌐</div>
+                        </div>
+                        <div class="project-info">
+                            <span class="project-tag">最新作品</span>
+                            <h3>个人网站</h3>
+                            <p>你现在正在浏览的这个站点 — 由 AI 辅助构建，纯手工打磨的个性化数字名片。黑白基调中融入艺术感性，多页面丝滑切换。</p>
+                            <div class="project-tech">
+                                <span>HTML</span><span>CSS</span><span>JavaScript</span><span>AI</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="project-card">
+                        <div class="project-thumb">
+                            <div class="project-thumb-placeholder">📄</div>
+                        </div>
+                        <div class="project-info">
+                            <h3>文档美化合集</h3>
+                            <p>为校内师生制作的各类文档排版与美化案例，涵盖论文、报告、演示文稿等。</p>
+                        </div>
+                    </div>
+                    <div class="project-card">
+                        <div class="project-thumb">
+                            <div class="project-thumb-placeholder">🎬</div>
+                        </div>
+                        <div class="project-info">
+                            <h3>视频剪辑作品</h3>
+                            <p>多部个人剪辑作品，涵盖日常 Vlog、活动记录等类型。</p>
+                        </div>
+                    </div>
+                    <div class="project-card project-more">
+                        <div class="project-thumb">
+                            <div class="project-thumb-placeholder">✨</div>
+                        </div>
+                        <div class="project-info">
+                            <h3>更多作品持续更新中</h3>
+                            <p>保持好奇，持续创作。更多项目即将上线。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== 联系页 ========== -->
+        <section id="contact" class="page">
+            <div class="page-inner">
+                <h2 class="section-title">联系我</h2>
+                <div class="contact-grid">
+                    <div class="contact-card">
+                        <div class="contact-icon">📧</div>
+                        <h3>邮箱</h3>
+                        <a href="mailto:1258291510@qq.com">1258291510@qq.com</a>
+                    </div>
+                    <div class="contact-card">
+                        <div class="contact-icon">📱</div>
+                        <h3>电话</h3>
+                        <a href="tel:17640577708">176 4057 7708</a>
+                    </div>
+                </div>
+                <div class="social-section">
+                    <h3>社交链接</h3>
+                    <div class="social-grid">
+                        <a href="#" class="social-card" title="微信">
+                            <span class="social-icon">💬</span>
+                            <span class="social-name">微信</span>
+                        </a>
+                        <a href="#" class="social-card" title="Telegram">
+                            <span class="social-icon">✈️</span>
+                            <span class="social-name">Telegram</span>
+                        </a>
+                        <a href="#" class="social-card" title="Twitter">
+                            <span class="social-icon">🐦</span>
+                            <span class="social-name">Twitter</span>
+                        </a>
+                        <a href="#" class="social-card" title="QQ">
+                            <span class="social-icon">🐧</span>
+                            <span class="social-name">QQ</span>
+                        </a>
+                    </div>
+                    <p class="social-note">社交链接待你补充具体地址后更新 ✨</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <p>&copy; 2025 刘森 · 由 AI 辅助构建 · 保持好奇</p>
+    </footer>
+
+    <script src="js/main.js"></script>
+</body>
+</html>
