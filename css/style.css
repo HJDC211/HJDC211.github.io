@@ -624,6 +624,20 @@ img { max-width: 100%; display: block; }
     font-size: 0.85rem;
     color: var(--text2);
     font-weight: 500;
+    margin-bottom: 4px;
+}
+
+.social-detail {
+    font-size: 0.82rem;
+    color: var(--text);
+    font-weight: 600;
+    margin-bottom: 2px;
+}
+
+.social-id {
+    font-size: 0.75rem;
+    color: var(--text3);
+    word-break: break-all;
 }
 
 .social-note {
