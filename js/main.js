@@ -118,7 +118,7 @@
         if (!player || !toggle) return;
 
         // 创建 audio 元素
-        var audio = new Audio('assets/bgm.flac');
+        var audio = new Audio('assets/bgm.mp3');
         audio.loop = true;
         audio.volume = 0.4;
 
