@@ -304,6 +304,249 @@
     }
 
     // ===========================================
+    // 7. 技能雷达图
+    // ===========================================
+    // 技能数据 — 从 .skill-fill 中读取，也可在此直接定义后备值
+    var radarSkills = [
+        { name: '视频剪辑', value: 80 },
+        { name: '文档处理', value: 85 },
+        { name: '文档规范', value: 80 },
+        { name: '数码知识', value: 75 },
+        { name: '游戏理解', value: 70 },
+        { name: '协助沟通', value: 82 }
+    ];
+
+    function initRadarChart() {
+        var canvas = document.getElementById('radarChart');
+        if (!canvas) return;
+        var ctx = canvas.getContext('2d');
+        var size = canvas.width;  // 340
+        var cx = size / 2, cy = size / 2;
+        var radius = 120;
+        var levels = 5;  // 5 层同心多边形
+        var n = radarSkills.length;  // 6 边形
+        var angleStep = (Math.PI * 2) / n;
+        var startAngle = -Math.PI / 2;  // 从顶部开始
+
+        // 取出数值
+        var values = radarSkills.map(function (s) { return s.value; });
+
+        // 动画变量
+        var animProgress = 0;
+        var animating = false;
+
+        // 读 skill-card 里的进度条数值
+        var bars = document.querySelectorAll('.skill-fill');
+        if (bars.length === n) {
+            bars.forEach(function (bar, i) {
+                var w = bar.style.getPropertyValue('--w');
+                if (w) values[i] = parseInt(w);
+            });
+        }
+
+        function getPoint(i, r, centerX, centerY) {
+            var angle = startAngle + i * angleStep;
+            return {
+                x: (centerX || cx) + r * Math.cos(angle),
+                y: (centerY || cy) + r * Math.sin(angle)
+            };
+        }
+
+        function drawFrame() {
+            ctx.clearRect(0, 0, size, size);
+
+            // 背景网格
+            for (var level = 1; level <= levels; level++) {
+                var r = (radius / levels) * level;
+                ctx.beginPath();
+                for (var i = 0; i < n; i++) {
+                    var pt = getPoint(i, r);
+                    if (i === 0) ctx.moveTo(pt.x, pt.y);
+                    else ctx.lineTo(pt.x, pt.y);
+                }
+                ctx.closePath();
+                ctx.strokeStyle = 'rgba(255, 255, 255, 0.06)';
+                ctx.lineWidth = 1;
+                ctx.stroke();
+
+                // 填充最低层
+                if (level === 1) {
+                    ctx.fillStyle = 'rgba(201, 160, 80, 0.03)';
+                    ctx.fill();
+                }
+            }
+
+            // 轴线
+            for (var i = 0; i < n; i++) {
+                var pt = getPoint(i, radius);
+                ctx.beginPath();
+                ctx.moveTo(cx, cy);
+                ctx.lineTo(pt.x, pt.y);
+                ctx.strokeStyle = 'rgba(255, 255, 255, 0.04)';
+                ctx.lineWidth = 1;
+                ctx.stroke();
+            }
+
+            // 刻度点
+            for (var level = 1; level <= levels; level++) {
+                var r = (radius / levels) * level;
+                for (var i = 0; i < n; i++) {
+                    var pt = getPoint(i, r);
+                    ctx.beginPath();
+                    ctx.arc(pt.x, pt.y, 2, 0, Math.PI * 2);
+                    ctx.fillStyle = 'rgba(255, 255, 255, 0.08)';
+                    ctx.fill();
+                }
+            }
+        }
+
+        function drawData(pct) {
+            // 清除之前的数据区域（重绘框架 + 数据）
+            drawFrame();
+
+            // 数据填充区域
+            var dataR = (radius / levels) * levels;  // 满半径
+            ctx.beginPath();
+            for (var i = 0; i < n; i++) {
+                var val = values[i] * pct / 100;
+                var r = (val / 100) * dataR;
+                var pt = getPoint(i, r);
+                if (i === 0) ctx.moveTo(pt.x, pt.y);
+                else ctx.lineTo(pt.x, pt.y);
+            }
+            ctx.closePath();
+
+            // 填充渐变
+            var grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, dataR);
+            grad.addColorStop(0, 'rgba(201, 160, 80, 0.35)');
+            grad.addColorStop(1, 'rgba(201, 160, 80, 0.05)');
+            ctx.fillStyle = grad;
+            ctx.fill();
+
+            // 描边
+            ctx.strokeStyle = 'rgba(201, 160, 80, 0.7)';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            // 顶点圆点
+            for (var i = 0; i < n; i++) {
+                var val = values[i] * pct / 100;
+                var r = (val / 100) * dataR;
+                var pt = getPoint(i, r);
+                ctx.beginPath();
+                ctx.arc(pt.x, pt.y, 4, 0, Math.PI * 2);
+                ctx.fillStyle = 'var(--accent)';
+                ctx.fill();
+                ctx.beginPath();
+                ctx.arc(pt.x, pt.y, 4, 0, Math.PI * 2);
+                ctx.fillStyle = '#d4b060';
+                ctx.fill();
+                // 光晕
+                ctx.beginPath();
+                ctx.arc(pt.x, pt.y, 8, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(201, 160, 80, 0.3)';
+                ctx.fill();
+            }
+        }
+
+        function drawLabels() {
+            var labelR = radius + 30;
+            for (var i = 0; i < n; i++) {
+                var pt = getPoint(i, labelR);
+                ctx.fillStyle = '#999';
+                ctx.font = '12px "PingFang SC", "Microsoft YaHei", sans-serif';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(radarSkills[i].name, pt.x, pt.y);
+
+                // 数值
+                var valPt = getPoint(i, labelR + 16);
+                ctx.fillStyle = '#c9a050';
+                ctx.font = 'bold 11px "PingFang SC", "Microsoft YaHei", sans-serif';
+                ctx.fillText(values[i] + '%', valPt.x, valPt.y);
+            }
+        }
+
+        function animateRadar() {
+            if (animating) return;
+            animating = true;
+            animProgress = 0;
+            var start = null;
+            var duration = 1200;
+
+            function step(ts) {
+                if (!start) start = ts;
+                var elapsed = ts - start;
+                var p = Math.min(elapsed / duration, 1);
+                // easeOutCubic
+                var eased = 1 - Math.pow(1 - p, 3);
+                animProgress = eased * 100;
+                drawData(animProgress);
+                drawLabels();
+                if (p < 1) {
+                    requestAnimationFrame(step);
+                } else {
+                    animating = false;
+                }
+            }
+            requestAnimationFrame(step);
+        }
+
+        // 初始绘制
+        drawFrame();
+        drawLabels();
+
+        // 滚动到技能区时触发动画
+        var skillsSection = document.getElementById('skills');
+        if (skillsSection) {
+            var radarObs = new IntersectionObserver(function (entries) {
+                if (entries[0].isIntersecting) {
+                    animateRadar();
+                    radarObs.unobserve(skillsSection);
+                }
+            }, { threshold: 0.3 });
+            radarObs.observe(skillsSection);
+        }
+
+        // 点击技能页导航时也触发
+        window.addEventListener('hashchange', function () {
+            if (window.location.hash === '#skills') {
+                setTimeout(animateRadar, 500);
+            }
+        });
+    }
+
+    // ===========================================
+    // 8. 访客计数器 (countapi.xyz)
+    // ===========================================
+    function initVisitorCounter() {
+        var el = document.getElementById('visitorCount');
+        if (!el) return;
+        var namespace = 'liusen-website';
+        var key = 'hjdc211.github.io';
+
+        // 先 hit（计数+1），再 get 总数
+        var hitUrl = 'https://api.countapi.xyz/hit/' + namespace + '/' + key;
+
+        fetch(hitUrl)
+            .then(function (r) { return r.json(); })
+            .then(function (data) {
+                el.innerHTML = '👁️ 你是第 <strong>' + data.value + '</strong> 位访客';
+            })
+            .catch(function () {
+                // 备用：只 get 不 hit
+                return fetch('https://api.countapi.xyz/get/' + namespace + '/' + key)
+                    .then(function (r) { return r.json(); })
+                    .then(function (data) {
+                        el.innerHTML = '👁️ 你是第 <strong>' + data.value + '</strong> 位访客';
+                    });
+            })
+            .catch(function () {
+                el.innerHTML = '👁️ 访客计数器离线中';
+            });
+    }
+
+    // ===========================================
     // 启动一切
     // ===========================================
     initParticles();
@@ -311,6 +554,8 @@
     initProgressBar();
     initBackToTop();
     initTilt();
+    initRadarChart();
+    initVisitorCounter();
     initNav();
     setupScrollAnimations();
 

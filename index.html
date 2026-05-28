@@ -20,6 +20,10 @@
     <!-- 导航栏 -->
     <nav class="navbar">
         <a href="#home" class="nav-logo">LS</a>
+        <div class="online-indicator" id="onlineIndicator" title="刘森在线">
+            <span class="online-dot"></span>
+            <span class="online-text">在线</span>
+        </div>
         <ul class="nav-links">
             <li><a href="#home" class="nav-item active" data-page="home">首页</a></li>
             <li><a href="#about" class="nav-item" data-page="about">关于</a></li>
@@ -112,6 +116,11 @@
         <section id="skills" class="page">
             <div class="page-inner">
                 <h2 class="section-title">技能</h2>
+                <div class="skills-top">
+                    <div class="radar-container">
+                        <canvas id="radarChart" width="340" height="340"></canvas>
+                    </div>
+                </div>
                 <div class="skills-grid">
                     <div class="skill-card">
                         <div class="skill-icon">🎬</div>
@@ -259,6 +268,7 @@
     <!-- 页脚 -->
     <footer class="footer">
         <p>&copy; 2025 刘森 · 由 AI 辅助构建 · 保持好奇</p>
+        <p class="visitor-count" id="visitorCount">👁️ 加载中...</p>
     </footer>
 
     <script src="js/main.js"></script>
