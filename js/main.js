@@ -110,18 +110,66 @@
     }
 
     // ===========================================
-    // 3. 阅读进度条
+    // 3. 背景音乐播放器
     // ===========================================
-    function initProgressBar() {
-        var bar = document.getElementById('progressBar');
-        if (!bar) return;
+    function initMusicPlayer() {
+        var player = document.getElementById('musicPlayer');
+        var toggle = document.getElementById('musicToggle');
+        if (!player || !toggle) return;
 
-        window.addEventListener('scroll', function () {
-            var scrollTop = window.scrollY || document.documentElement.scrollTop;
-            var docHeight = document.documentElement.scrollHeight - window.innerHeight;
-            var progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
-            bar.style.width = Math.min(progress, 100) + '%';
+        // 创建 audio 元素
+        var audio = new Audio('assets/bgm.flac');
+        audio.loop = true;
+        audio.volume = 0.4;
+
+        var playing = false;
+
+        function playMusic() {
+            audio.play().then(function () {
+                playing = true;
+                player.classList.add('playing');
+                player.classList.remove('paused');
+            }).catch(function () {
+                // 浏览器拦截自动播放，静默处理
+                player.classList.add('paused');
+                playing = false;
+            });
+        }
+
+        function pauseMusic() {
+            audio.pause();
+            playing = false;
+            player.classList.add('paused');
+            player.classList.remove('playing');
+        }
+
+        toggle.addEventListener('click', function () {
+            if (playing) {
+                pauseMusic();
+            } else {
+                playMusic();
+            }
         });
+
+        // 页面加载后尝试自动播放（用户首次交互后）
+        var autoPlayTried = false;
+        function tryAutoPlay() {
+            if (autoPlayTried) return;
+            autoPlayTried = true;
+            playMusic();
+            // 移除一次性监听器
+            document.removeEventListener('click', tryAutoPlay);
+            document.removeEventListener('keydown', tryAutoPlay);
+            document.removeEventListener('touchstart', tryAutoPlay);
+            document.removeEventListener('scroll', tryAutoPlay);
+        }
+        document.addEventListener('click', tryAutoPlay, { once: true });
+        document.addEventListener('keydown', tryAutoPlay, { once: true });
+        document.addEventListener('touchstart', tryAutoPlay, { once: true });
+        document.addEventListener('scroll', tryAutoPlay, { once: true });
+
+        // 也直接尝试（部分浏览器允许）
+        playMusic();
     }
 
     // ===========================================
@@ -517,33 +565,40 @@
     }
 
     // ===========================================
-    // 8. 访客计数器 (countapi.xyz)
+    // 8. 访客计数器 (JSONP 绕过跨域限制)
     // ===========================================
     function initVisitorCounter() {
         var el = document.getElementById('visitorCount');
         if (!el) return;
-        var namespace = 'liusen-website';
-        var key = 'hjdc211.github.io';
 
-        // 先 hit（计数+1），再 get 总数
-        var hitUrl = 'https://api.countapi.xyz/hit/' + namespace + '/' + key;
+        // 优先用 localStorage 记录本设备是否已计数
+        var visitedKey = 'liusen-site-visited';
+        var hasVisited = localStorage.getItem(visitedKey);
+        var count = parseInt(localStorage.getItem('liusen-local-count') || '0', 10);
+        if (!hasVisited) {
+            count++;
+            localStorage.setItem(visitedKey, '1');
+            localStorage.setItem('liusen-local-count', count.toString());
+        }
+        el.innerHTML = '👁️ 本站已被访问 <strong>' + count + '</strong> 次（本设备）';
 
-        fetch(hitUrl)
-            .then(function (r) { return r.json(); })
-            .then(function (data) {
+        // 用 JSONP 方式从 countapi 获取云端计数
+        var script = document.createElement('script');
+        var callbackName = 'cb_' + Math.random().toString(36).slice(2);
+        window[callbackName] = function (data) {
+            if (data && data.value) {
                 el.innerHTML = '👁️ 你是第 <strong>' + data.value + '</strong> 位访客';
-            })
-            .catch(function () {
-                // 备用：只 get 不 hit
-                return fetch('https://api.countapi.xyz/get/' + namespace + '/' + key)
-                    .then(function (r) { return r.json(); })
-                    .then(function (data) {
-                        el.innerHTML = '👁️ 你是第 <strong>' + data.value + '</strong> 位访客';
-                    });
-            })
-            .catch(function () {
-                el.innerHTML = '👁️ 访客计数器离线中';
-            });
+            }
+            delete window[callbackName];
+            document.body.removeChild(script);
+        };
+        script.src = 'https://api.countapi.xyz/hit/liusen-website/hjdc211.github.io?callback=' + callbackName;
+        script.onerror = function () {
+            // 云端不可用，保留本地计数
+            delete window[callbackName];
+            document.body.removeChild(script);
+        };
+        document.body.appendChild(script);
     }
 
     // ===========================================
@@ -551,7 +606,7 @@
     // ===========================================
     initParticles();
     initTypewriter();
-    initProgressBar();
+    initMusicPlayer();
     initBackToTop();
     initTilt();
     initRadarChart();
